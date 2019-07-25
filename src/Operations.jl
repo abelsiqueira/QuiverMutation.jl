@@ -10,7 +10,7 @@ function activate(lt :: Lattice, i :: Int, j :: Int)
   if i == lt.rows
     error("No activation is allowed in the last line of the lattice")
   elseif i < 1 || i > lt.rows || j < 1 || j > lt.cols
-    error("Bad index. Check lattice dimensions")
+    error("Bad index ($i,$j). Check lattice dimensions")
   end
 
   k = i + (j - 1) * lt.rows
@@ -21,10 +21,6 @@ function activate(lt :: Lattice, i :: Int, j :: Int)
   J = findall(lt.B[k,:] .< 0)
   if length(I) == 0 && length(J) == 0
     error("No adjacent edges. Is this supposed to happen?")
-  elseif length(I) == 0
-    error("Fix")
-  elseif length(J) == 0
-    error("Fix")
   else
     kr1 = KR(0,0)
     for p = I
@@ -57,4 +53,16 @@ function activate(lt :: Lattice, i :: Int, j :: Int)
   x[i,j] = xprime
 
   return Lattice(lt.cols, lt.rows, Bc, x)
+end
+
+"""
+    activate(lattice, path)
+
+Activate each index of `path` in order. If path is empty, the original lattice is returned.
+"""
+function activate(lt :: Lattice, P :: Array)
+  for (i,j) in P
+    lt = activate(lt, i, j)
+  end
+  return lt
 end

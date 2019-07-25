@@ -26,7 +26,7 @@ function KR(str :: String)
     i, j = Meta.parse.(split(e, "_"))
     push!(L, (i,j))
   end
-  return KR(L)
+  return KR(sort(L))
 end
 
 """
@@ -93,7 +93,7 @@ import Base.-
 (-)(kr1 :: KR, kr2 :: KR) = slice(kr1, kr2)
 
 import Base.==
-==(kr1 :: KR, kr2 :: KR) = length(slice(kr1, kr2).elements) == 0
+==(kr1 :: KR, kr2 :: KR) = length(slice(kr1, kr2).elements) == 0 && length(slice(kr2, kr1).elements) == 0
 
 """
     weight(kr, cols)

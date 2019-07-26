@@ -91,3 +91,6 @@ function adjacent(lt, i, j)
   end
   return L
 end
+
+import Base.==
+==(lt1 :: Lattice, lt2 :: Lattice) = (lt1.B == lt2.B) && (lt1.x == lt2.x)

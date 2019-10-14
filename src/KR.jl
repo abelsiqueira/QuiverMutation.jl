@@ -1,6 +1,6 @@
 using LinearAlgebra, SparseArrays
 
-export KR, @KR_str, glue, slice, weight, solve_product
+export KR, @KR_str, glue, slice, weight, solve_product, distance
 
 struct KR
   elements :: Array{Tuple{Int,Int},1}
@@ -95,6 +95,11 @@ import Base.-
 import Base.==
 ==(kr1 :: KR, kr2 :: KR) = length(slice(kr1, kr2).elements) == 0 && length(slice(kr2, kr1).elements) == 0
 
+function distance(kr1 :: KR, kr2 :: KR)
+  d = (kr1 - kr2) & (kr2 - kr1)
+  return norm(weight(d, 2))
+end
+
 """
     weight(kr, cols)
 
@@ -122,4 +127,20 @@ function solve_product(krx, krA, krB, cols)
     error("Neither r ≥ 0 nor r ≤ 0")
   end
   return s - krx
+end
+
+function isless(kr1 :: KR, kr2 :: KR)
+  if length(kr1.elements) < length(kr2.elements)
+    return true
+  elseif length(kr1.elements) > length(kr2.elements)
+    return false
+  end
+  for (a, b) in zip(kr1.elements, kr2.elements)
+    if a < b
+      return true
+    elseif a > b
+      return false
+    end
+  end
+  return false
 end
